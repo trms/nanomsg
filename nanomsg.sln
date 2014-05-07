@@ -3,6 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanomsg", "nanomsg.vcxproj", "{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanocat", "nanocat.vcxproj", "{24F1779E-0E51-46D7-8864-7D3F246BF9BD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4} = {479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -17,8 +22,16 @@ Global
 		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Debug|x64.Build.0 = Debug|x64
 		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|Win32.ActiveCfg = Release|Win32
 		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|Win32.Build.0 = Release|Win32
-		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|x64.ActiveCfg = Release|x64
-		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|x64.Build.0 = Release|x64
+		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|x64.ActiveCfg = Debug|x64
+		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}.Release|x64.Build.0 = Debug|x64
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|Win32.Build.0 = Debug|Win32
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|x64.ActiveCfg = Debug|x64
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|x64.Build.0 = Debug|x64
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Release|Win32.ActiveCfg = Release|Win32
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Release|Win32.Build.0 = Release|Win32
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Release|x64.ActiveCfg = Release|x64
+		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

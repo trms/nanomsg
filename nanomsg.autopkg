@@ -1,0 +1,37 @@
+nuget {
+	nuspec {
+		id = nanomsg;
+		title: nanomsg;
+		version: 0.3.0504;
+		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
+		owners: {250bpm s.r.o.};
+		licenseUrl: "http://opensource.org/licenses/MIT";
+		projectUrl: "http://www.nanomsg.org/";
+		iconUrl: "http://nanomsg.org/logo.png";
+		releaseNotes: {@"Head as of 2014/05/07"}; 
+		requireLicenseAcceptance:false;
+		summary: "A socket library that provides several common communication patterns. ";
+		copyright: "nanomsg is a trademark of 250bpm s.r.o.";
+		tags: {native, nanomsg, nanocat, network, socket};
+		description: {
+@"nanomsg is a socket library that provides several common communication patterns. It aims to make the networking layer fast, scalable, and easy to use. Implemented in C, it works on a wide range of operating systems with no further dependencies.
+
+The communication patterns, also called "scalability protocols", are basic blocks for building distributed systems. By combining them you can create a vast array of distributed applications.";}
+	};
+
+	files {
+		include : { x64\Release\include\* };
+		docs : {
+			#destination = ${d_docs}\nanomsg;
+			doc\**\*
+		};
+		[x64, v100]
+        	lib: x64\Release\*.lib;
+        	bin: {x64\Release\*.dll, x64\Release\*.exe};
+        	pdb: x64\Release\*.pdb;
+        [win32, v100]
+        	lib: Win32\Release\*.lib;
+        	bin: {Win32\Release\*.dll, Win32\Release\*.exe};
+        	pdb: Win32\Release\*.pdb;
+    }
+}

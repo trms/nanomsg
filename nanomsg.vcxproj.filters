@@ -15,24 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="perf\inproc_lat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="perf\inproc_thr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="perf\local_lat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="perf\local_thr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="perf\remote_lat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="perf\remote_thr.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\aio\ctx.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -70,6 +52,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\pipe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\poll.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\core\sock.c">
@@ -112,6 +97,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\protocols\pubsub\trie.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\protocols\pubsub\xpub.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\protocols\pubsub\xsub.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\protocols\reqrep\rep.c">
@@ -279,99 +270,6 @@
     <ClCompile Include="src\utils\wire.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="tests\block.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\bus.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\device.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\domain.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\emfile.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\hash.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\inproc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\inproc_shutdown.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\iovec.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\ipc.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\ipc_shutdown.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\list.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\msg.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\pair.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\pipeline.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\poll.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\prio.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\pubsub.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\reqrep.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\separation.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\shutdown.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\survey.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\symbol.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\tcp.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\tcp_shutdown.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\term.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\timeo.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\trie.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tests\zerocopy.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tools\nanocat.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tools\options.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\bus.h">
@@ -497,6 +395,12 @@
     <ClInclude Include="src\protocols\pubsub\trie.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\protocols\pubsub\xpub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\protocols\pubsub\xsub.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\protocols\reqrep\rep.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -614,6 +518,9 @@
     <ClInclude Include="src\utils\atomic.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\utils\attr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="src\utils\chunk.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -699,12 +606,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\wire.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tests\testutil.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tools\options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

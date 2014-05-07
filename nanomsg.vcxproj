@@ -43,15 +43,19 @@
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="nanomsg.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="nanomsg.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="nanomsg.props" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="nanomsg.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -68,39 +72,37 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>NN_HAVE_WINDOWS;WIN32;_DEBUG;_WINDOWS;_USRDLL;NANOMSG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>ws2_32;Mswsock.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>NN_USE_LITERAL_IFADDR;NN_EXPORTS;NN_HAVE_WINDOWS;WIN32;_DEBUG;_WINDOWS;_USRDLL;NANOMSG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>ws2_32.lib;Mswsock.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <PreprocessorDefinitions>NN_HAVE_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;NANOMSG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <TargetMachine>MachineX86</TargetMachine>
@@ -108,31 +110,23 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32;Mswsock.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <PreprocessorDefinitions>NN_HAVE_WINDOWS;WIN32;NDEBUG;_WINDOWS;_USRDLL;NANOMSG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>ws2_32;Mswsock.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="perf\inproc_lat.c" />
-    <ClCompile Include="perf\inproc_thr.c" />
-    <ClCompile Include="perf\local_lat.c" />
-    <ClCompile Include="perf\local_thr.c" />
-    <ClCompile Include="perf\remote_lat.c" />
-    <ClCompile Include="perf\remote_thr.c" />
     <ClCompile Include="src\aio\ctx.c" />
     <ClCompile Include="src\aio\fsm.c" />
     <ClCompile Include="src\aio\poller.c" />
@@ -146,6 +140,7 @@
     <ClCompile Include="src\core\epbase.c" />
     <ClCompile Include="src\core\global.c" />
     <ClCompile Include="src\core\pipe.c" />
+    <ClCompile Include="src\core\poll.c" />
     <ClCompile Include="src\core\sock.c" />
     <ClCompile Include="src\core\sockbase.c" />
     <ClCompile Include="src\core\symbol.c" />
@@ -160,6 +155,8 @@
     <ClCompile Include="src\protocols\pubsub\pub.c" />
     <ClCompile Include="src\protocols\pubsub\sub.c" />
     <ClCompile Include="src\protocols\pubsub\trie.c" />
+    <ClCompile Include="src\protocols\pubsub\xpub.c" />
+    <ClCompile Include="src\protocols\pubsub\xsub.c" />
     <ClCompile Include="src\protocols\reqrep\rep.c" />
     <ClCompile Include="src\protocols\reqrep\req.c" />
     <ClCompile Include="src\protocols\reqrep\xrep.c" />
@@ -215,37 +212,6 @@
     <ClCompile Include="src\utils\stopwatch.c" />
     <ClCompile Include="src\utils\thread.c" />
     <ClCompile Include="src\utils\wire.c" />
-    <ClCompile Include="tests\block.c" />
-    <ClCompile Include="tests\bus.c" />
-    <ClCompile Include="tests\device.c" />
-    <ClCompile Include="tests\domain.c" />
-    <ClCompile Include="tests\emfile.c" />
-    <ClCompile Include="tests\hash.c" />
-    <ClCompile Include="tests\inproc.c" />
-    <ClCompile Include="tests\inproc_shutdown.c" />
-    <ClCompile Include="tests\iovec.c" />
-    <ClCompile Include="tests\ipc.c" />
-    <ClCompile Include="tests\ipc_shutdown.c" />
-    <ClCompile Include="tests\list.c" />
-    <ClCompile Include="tests\msg.c" />
-    <ClCompile Include="tests\pair.c" />
-    <ClCompile Include="tests\pipeline.c" />
-    <ClCompile Include="tests\poll.c" />
-    <ClCompile Include="tests\prio.c" />
-    <ClCompile Include="tests\pubsub.c" />
-    <ClCompile Include="tests\reqrep.c" />
-    <ClCompile Include="tests\separation.c" />
-    <ClCompile Include="tests\shutdown.c" />
-    <ClCompile Include="tests\survey.c" />
-    <ClCompile Include="tests\symbol.c" />
-    <ClCompile Include="tests\tcp.c" />
-    <ClCompile Include="tests\tcp_shutdown.c" />
-    <ClCompile Include="tests\term.c" />
-    <ClCompile Include="tests\timeo.c" />
-    <ClCompile Include="tests\trie.c" />
-    <ClCompile Include="tests\zerocopy.c" />
-    <ClCompile Include="tools\nanocat.c" />
-    <ClCompile Include="tools\options.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\aio\ctx.h" />
@@ -284,6 +250,8 @@
     <ClInclude Include="src\protocols\pubsub\pub.h" />
     <ClInclude Include="src\protocols\pubsub\sub.h" />
     <ClInclude Include="src\protocols\pubsub\trie.h" />
+    <ClInclude Include="src\protocols\pubsub\xpub.h" />
+    <ClInclude Include="src\protocols\pubsub\xsub.h" />
     <ClInclude Include="src\protocols\reqrep\rep.h" />
     <ClInclude Include="src\protocols\reqrep\req.h" />
     <ClInclude Include="src\protocols\reqrep\xrep.h" />
@@ -328,6 +296,7 @@
     <ClInclude Include="src\transports\utils\streamhdr.h" />
     <ClInclude Include="src\utils\alloc.h" />
     <ClInclude Include="src\utils\atomic.h" />
+    <ClInclude Include="src\utils\attr.h" />
     <ClInclude Include="src\utils\chunk.h" />
     <ClInclude Include="src\utils\chunkref.h" />
     <ClInclude Include="src\utils\clock.h" />
@@ -357,8 +326,6 @@
     <ClInclude Include="src\utils\thread_win.h" />
     <ClInclude Include="src\utils\win.h" />
     <ClInclude Include="src\utils\wire.h" />
-    <ClInclude Include="tests\testutil.h" />
-    <ClInclude Include="tools\options.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="src\aio\poller_epoll.inc" />
