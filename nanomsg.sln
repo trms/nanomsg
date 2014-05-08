@@ -8,6 +8,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanocat", "nanocat.vcxproj"
 		{479E3CB3-4BFA-0CA3-26BB-340904DD6AE4} = {479E3CB3-4BFA-0CA3-26BB-340904DD6AE4}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A8119CC-0EE8-40C6-86E7-0E9106440809}"
+	ProjectSection(SolutionItems) = preProject
+		nanomsg.autopkg = nanomsg.autopkg
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32

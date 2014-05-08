@@ -15,12 +15,8 @@
     <Link>
       <AdditionalDependencies>ws2_32.lib;Mswsock.lib;Advapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
-    <PostBuildEvent>
-      <Command>xcopy /I/F/Y .\src\*.h %TargetDir%include\</Command>
-    </PostBuildEvent>
-    <PostBuildEvent>
-      <Message>Copying header files...</Message>
-    </PostBuildEvent>
+    <PostBuildEvent />
+    <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="TargetDir">

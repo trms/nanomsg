@@ -2,7 +2,7 @@ nuget {
 	nuspec {
 		id = nanomsg;
 		title: nanomsg;
-		version: 0.3.0504;
+		version: 0.3.0504.1;
 		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
 		owners: {250bpm s.r.o.};
 		licenseUrl: "http://opensource.org/licenses/MIT";
@@ -20,18 +20,19 @@ The communication patterns, also called "scalability protocols", are basic block
 	};
 
 	files {
+		include : { src\*.h };
 		include : { x64\Release\include\* };
 		docs : {
 			#destination = ${d_docs}\nanomsg;
 			doc\**\*
 		};
-		[x64, v100]
+		[x64, v100] {
         	lib: x64\Release\*.lib;
         	bin: {x64\Release\*.dll, x64\Release\*.exe};
-        	pdb: x64\Release\*.pdb;
-        [win32, v100]
+		};
+        [win32, v100] {
         	lib: Win32\Release\*.lib;
         	bin: {Win32\Release\*.dll, Win32\Release\*.exe};
-        	pdb: Win32\Release\*.pdb;
+		};
     }
 }

@@ -12,7 +12,7 @@
       <AdditionalLibraryDirectories>$(TargetDir)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(TargetDir)include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CONSOLE;NN_HAVE_WINDOWS;NN_USE_LITERAL_IFADDR;WIN32;_WINDOWS;_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
