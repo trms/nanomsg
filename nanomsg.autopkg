@@ -2,13 +2,13 @@ nuget {
 	nuspec {
 		id = nanomsg;
 		title: nanomsg;
-		version: 0.3.0504.4;
+		version: 0.3.0530.1;
 		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
 		owners: {250bpm s.r.o.};
 		licenseUrl: "http://opensource.org/licenses/MIT";
 		projectUrl: "http://www.nanomsg.org/";
 		iconUrl: "http://nanomsg.org/logo.png";
-		releaseNotes: {@"Head as of 2014/05/07"}; 
+		releaseNotes: {@"Head as of 2014/05/30"}; 
 		requireLicenseAcceptance:false;
 		summary: "A socket library that provides several common communication patterns. ";
 		copyright: "nanomsg is a trademark of 250bpm s.r.o.";
