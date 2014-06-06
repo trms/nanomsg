@@ -2,7 +2,7 @@ nuget {
 	nuspec {
 		id = nanomsg;
 		title: nanomsg;
-		version: 0.3.0530.1;
+		version: 0.3.0530.4;
 		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
 		owners: {250bpm s.r.o.};
 		licenseUrl: "http://opensource.org/licenses/MIT";
@@ -21,22 +21,50 @@ The communication patterns, also called "scalability protocols", are basic block
 
 	files {
 		include : { "src\*.h" };
-		include : { "x64\Release\include\*" };
 		docs : {
 			#destination = {"${d_docs}\nanomsg"};
 			{"doc\**\*"};
 		};
+		mypdb: { 
+            // copies the whole folder tree.
+            #add-all-files : Items.nnPdb;
+            // set the destination in the package itself. 
+			#destination : ${build_root}\${conditionFolder}\nnPdb;
+        };
+		
+		[x64, v100, Debug] {
+        	lib: {"x64\Debug\*.lib"};
+        	bin: {"x64\Debug\*.dll", "x64\Debug\*.exe"};
+        	mypdb: {"x64\Debug\*.pdb"};
+		};
 
-		[x64, v100] {
+		[x64, v100, Release] {
         	lib: {"x64\Release\*.lib"};
         	bin: {"x64\Release\*.dll", "x64\Release\*.exe"};
-        	//pdb: {"x64\Release\*.pdb"};
+        	mypdb: {"x64\Release\*.pdb"};
 		};
 
-        [win32, v100] {
+        [win32, v100, Debug] {
+        	lib: {"Win32\Debug\*.lib"};
+        	bin: {"Win32\Debug\*.dll", "Win32\Debug\*.exe"};
+        	mypdb: {"Win32\Debug\*.pdb"};
+		};
+		
+		[win32, v100, Release] {
         	lib: {"Win32\Release\*.lib"};
         	bin: {"Win32\Release\*.dll", "Win32\Release\*.exe"};
-        	//pdb: {"Win32\Release\*.pdb"};
+        	mypdb: {"Win32\Release\*.pdb"};
 		};
     }
+	
+	targets {
+		AfterBuild {
+			.Copy {
+				DestinationFolder = "$(TargetDir)";
+				SourceFiles = "@(nnPdb)";
+				SkipUnchangedFiles = true;
+				UseHardlinksIfPossible = true;
+			};
+		};
+	}
 }
