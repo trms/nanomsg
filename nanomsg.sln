@@ -9,9 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nanocat", "nanocat.vcxproj"
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8A8119CC-0EE8-40C6-86E7-0E9106440809}"
-	ProjectSection(SolutionItems) = preProject
-		nanomsg.autopkg = nanomsg.autopkg
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +24,8 @@ Global
 		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Debug|x64.Build.0 = Debug|x64
 		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|Win32.ActiveCfg = Release|Win32
 		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|Win32.Build.0 = Release|Win32
-		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|x64.ActiveCfg = Debug|x64
-		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|x64.Build.0 = Debug|x64
+		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|x64.ActiveCfg = Release|x64
+		{E10E85E1-C88E-6057-FAB9-A6DBE65564FC}.Release|x64.Build.0 = Release|x64
 		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|Win32.ActiveCfg = Debug|Win32
 		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|Win32.Build.0 = Debug|Win32
 		{24F1779E-0E51-46D7-8864-7D3F246BF9BD}.Debug|x64.ActiveCfg = Debug|x64
