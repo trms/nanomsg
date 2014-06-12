@@ -2,7 +2,7 @@ nuget {
 	nuspec {
 		id = nanomsg;
 		title: nanomsg;
-		version: 0.3.0530.5;
+		version: 0.3.0530.6;
 		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
 		owners: {250bpm s.r.o.};
 		licenseUrl: "http://opensource.org/licenses/MIT";
