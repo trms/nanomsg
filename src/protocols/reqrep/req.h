@@ -23,11 +23,11 @@
 #ifndef NN_REQ_INCLUDED
 #define NN_REQ_INCLUDED
 
-#include "../../protocol.h"
 #include "xreq.h"
-#include "../../aio/fsm.h"
-#include "../../aio/timer.h"
+#include "task.h"
 
+#include "../../protocol.h"
+#include "../../aio/fsm.h"
 
 struct nn_req {
 
@@ -38,25 +38,14 @@ struct nn_req {
     struct nn_fsm fsm;
     int state;
 
-    /*  ID of the request being currently processed. Replies for different
-        requests are considered stale and simply dropped. */
-    uint32_t reqid;
-
-    /*  Stored request, so that it can be re-sent if needed. */
-    struct nn_msg request;
-
-    /*  Stored reply, so that user can retrieve it later on. */
-    struct nn_msg reply;
-
-    /*  Timer used to wait while request should be re-sent. */
-    struct nn_timer timer;
+    /*  Last request ID assigned. */
+    uint32_t lastid;
 
     /*  Protocol-specific socket options. */
     int resend_ivl;
 
-    /*  Pipe the current request has been sent to. Non-null only in ACTIVE
-        state  */
-    struct nn_pipe *sent_to;
+    /*  The request being processed. */
+    struct nn_task task;
 };
 
 extern struct nn_socktype *nn_req_socktype;
@@ -79,9 +68,9 @@ static void nn_req_destroy (struct nn_sockbase *self);
 static void nn_req_in (struct nn_sockbase *self, struct nn_pipe *pipe);
 static void nn_req_out (struct nn_sockbase *self, struct nn_pipe *pipe);
 static int nn_req_events (struct nn_sockbase *self);
-static int nn_req_send (struct nn_sockbase *self, struct nn_msg *msg);
+static int nn_req_csend (struct nn_sockbase *self, struct nn_msg *msg);
 static void nn_req_rm (struct nn_sockbase *self, struct nn_pipe *pipe);
-static int nn_req_recv (struct nn_sockbase *self, struct nn_msg *msg);
+static int nn_req_crecv (struct nn_sockbase *self, struct nn_msg *msg);
 static int nn_req_setopt (struct nn_sockbase *self, int level, int option,
     const void *optval, size_t optvallen);
 static int nn_req_getopt (struct nn_sockbase *self, int level, int option,
