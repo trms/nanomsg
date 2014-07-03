@@ -23,8 +23,33 @@
 #ifndef NN_CHUNK_INCLUDED
 #define NN_CHUNK_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 #include "int.h"
+
+#if defined NN_NO_EXPORTS
+#   define NN_EXPORT
+#else
+#   if defined _WIN32
+#      if defined NN_EXPORTS
+#          define NN_EXPORT __declspec(dllexport)
+#      else
+#          define NN_EXPORT __declspec(dllimport)
+#      endif
+#   else
+#      if defined __SUNPRO_C
+#          define NN_EXPORT __global
+#      elif (defined __GNUC__ && __GNUC__ >= 4) || \
+	defined __INTEL_COMPILER || defined __clang__
+#          define NN_EXPORT __attribute__ ((visibility("default")))
+#      else
+#          define NN_EXPORT
+#      endif
+#   endif
+#endif
 
 /*  Allocates the chunk using the allocation mechanism specified by 'type'. */
 int nn_chunk_alloc (size_t size, int type, void **result);
@@ -34,17 +59,22 @@ int nn_chunk_realloc (size_t size, void **chunk);
 
 /*  Releases a reference to the chunk and once the reference count had dropped
     to zero, deallocates the chunk. */
-void nn_chunk_free (void *p);
+NN_EXPORT void nn_chunk_free (void *p);
 
 /*  Increases the reference count of the chunk by 'n'. */
-void nn_chunk_addref (void *p, uint32_t n);
+NN_EXPORT void nn_chunk_addref (void *p, uint32_t n);
 
 /*  Returns size of the chunk buffer. */
-size_t nn_chunk_size (void *p);
+NN_EXPORT size_t nn_chunk_size (void *p);
 
 /*  Trims n bytes from the beginning of the chunk. Returns pointer to the new
     chunk. */
 void *nn_chunk_trim (void *p, size_t n);
 
+#undef NN_EXPORT
+
+#ifdef __cplusplus
+}
 #endif
 
+#endif
