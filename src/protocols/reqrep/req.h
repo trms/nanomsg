@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012-2013 250bpm s.r.o.  All rights reserved.
+    Copyright (c) 2012-2013 Martin Sustrik  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"),
@@ -23,11 +23,11 @@
 #ifndef NN_REQ_INCLUDED
 #define NN_REQ_INCLUDED
 
-#include "../../protocol.h"
 #include "xreq.h"
-#include "../../aio/fsm.h"
-#include "../../aio/timer.h"
+#include "task.h"
 
+#include "../../protocol.h"
+#include "../../aio/fsm.h"
 
 struct nn_req {
 
@@ -38,53 +38,44 @@ struct nn_req {
     struct nn_fsm fsm;
     int state;
 
-    /*  ID of the request being currently processed. Replies for different
-        requests are considered stale and simply dropped. */
-    uint32_t reqid;
-
-    /*  Stored request, so that it can be re-sent if needed. */
-    struct nn_msg request;
-
-    /*  Stored reply, so that user can retrieve it later on. */
-    struct nn_msg reply;
-
-    /*  Timer used to wait while request should be re-sent. */
-    struct nn_timer timer;
+    /*  Last request ID assigned. */
+    uint32_t lastid;
 
     /*  Protocol-specific socket options. */
     int resend_ivl;
 
-    /*  Pipe the current request has been sent to. Non-null only in ACTIVE
-        state  */
-    struct nn_pipe *sent_to;
+    /*  The request being processed. */
+    struct nn_task task;
 };
 
 extern struct nn_socktype *nn_req_socktype;
 
 /*  Some users may want to extend the REQ protocol similar to how REQ extends XREQ.
     Expose these methods to improve extensibility. */
-static void nn_req_init (struct nn_req *self,
+void nn_req_init (struct nn_req *self,
     const struct nn_sockbase_vfptr *vfptr, void *hint);
-static void nn_req_term (struct nn_req *self);
-static int nn_req_inprogress (struct nn_req *self);
-static void nn_req_handler (struct nn_fsm *self, int src, int type,
+void nn_req_term (struct nn_req *self);
+int nn_req_inprogress (struct nn_req *self);
+void nn_req_handler (struct nn_fsm *self, int src, int type,
     void *srcptr);
-static void nn_req_shutdown (struct nn_fsm *self, int src, int type,
+void nn_req_shutdown (struct nn_fsm *self, int src, int type,
     void *srcptr);
-static void nn_req_action_send (struct nn_req *self, int allow_delay);
+void nn_req_action_send (struct nn_req *self, int allow_delay);
 
 /*  Implementation of nn_sockbase's virtual functions. */
-static void nn_req_stop (struct nn_sockbase *self);
-static void nn_req_destroy (struct nn_sockbase *self);
-static void nn_req_in (struct nn_sockbase *self, struct nn_pipe *pipe);
-static void nn_req_out (struct nn_sockbase *self, struct nn_pipe *pipe);
-static int nn_req_events (struct nn_sockbase *self);
-static int nn_req_send (struct nn_sockbase *self, struct nn_msg *msg);
-static void nn_req_rm (struct nn_sockbase *self, struct nn_pipe *pipe);
-static int nn_req_recv (struct nn_sockbase *self, struct nn_msg *msg);
-static int nn_req_setopt (struct nn_sockbase *self, int level, int option,
+void nn_req_stop (struct nn_sockbase *self);
+void nn_req_destroy (struct nn_sockbase *self);
+void nn_req_in (struct nn_sockbase *self, struct nn_pipe *pipe);
+void nn_req_out (struct nn_sockbase *self, struct nn_pipe *pipe);
+int nn_req_events (struct nn_sockbase *self);
+int nn_req_csend (struct nn_sockbase *self, struct nn_msg *msg);
+void nn_req_rm (struct nn_sockbase *self, struct nn_pipe *pipe);
+int nn_req_crecv (struct nn_sockbase *self, struct nn_msg *msg);
+int nn_req_setopt (struct nn_sockbase *self, int level, int option,
     const void *optval, size_t optvallen);
-static int nn_req_getopt (struct nn_sockbase *self, int level, int option,
+int nn_req_getopt (struct nn_sockbase *self, int level, int option,
     void *optval, size_t *optvallen);
+int nn_req_csend (struct nn_sockbase *self, struct nn_msg *msg);
+int nn_req_crecv (struct nn_sockbase *self, struct nn_msg *msg);
 
 #endif
