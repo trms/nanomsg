@@ -1,5 +1,5 @@
 #
-#   Copyright (c) 2012 250bpm s.r.o.  All rights reserved.
+#   Copyright (c) 2012 Martin Sustrik  All rights reserved.
 #   Copyright (c) 2013 GoPivotal, Inc.  All rights reserved.
 #
 #   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -67,8 +67,11 @@ add_libnanomsg_test (inproc)
 add_libnanomsg_test (inproc_shutdown)
 add_libnanomsg_test (ipc)
 add_libnanomsg_test (ipc_shutdown)
+add_libnanomsg_test (ipc_stress)
 add_libnanomsg_test (tcp)
 add_libnanomsg_test (tcp_shutdown)
+add_libnanomsg_test (ws)
+add_libnanomsg_test (tcpmux)
 
 #  Protocol tests.
 add_libnanomsg_test (pair)
@@ -96,6 +99,7 @@ add_libnanomsg_test (symbol)
 add_libnanomsg_test (separation)
 add_libnanomsg_test (zerocopy)
 add_libnanomsg_test (shutdown)
+add_libnanomsg_test (cmsg)
 
 #  Build the performance tests.
 
@@ -117,6 +121,7 @@ install (FILES src/nn.h DESTINATION include/nanomsg)
 install (FILES src/inproc.h DESTINATION include/nanomsg)
 install (FILES src/ipc.h DESTINATION include/nanomsg)
 install (FILES src/tcp.h DESTINATION include/nanomsg)
+install (FILES src/ws.h DESTINATION include/nanomsg)
 install (FILES src/pair.h DESTINATION include/nanomsg)
 install (FILES src/pubsub.h DESTINATION include/nanomsg)
 install (FILES src/reqrep.h DESTINATION include/nanomsg)

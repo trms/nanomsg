@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012-2014 250bpm s.r.o.  All rights reserved.
+    Copyright (c) 2012-2014 Martin Sustrik  All rights reserved.
     Copyright (c) 2013 GoPivotal, Inc.  All rights reserved.
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -46,6 +46,8 @@
 #include "../transports/inproc/inproc.h"
 #include "../transports/ipc/ipc.h"
 #include "../transports/tcp/tcp.h"
+#include "../transports/ws/ws.h"
+#include "../transports/tcpmux/tcpmux.h"
 
 #include "../protocols/pair/pair.h"
 #include "../protocols/pair/xpair.h"
@@ -74,7 +76,6 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdlib.h>
 #include <time.h>
 
 #if defined NN_HAVE_MINGW
@@ -255,6 +256,8 @@ static void nn_global_init (void)
     nn_global_add_transport (nn_inproc);
     nn_global_add_transport (nn_ipc);
     nn_global_add_transport (nn_tcp);
+    nn_global_add_transport (nn_ws);
+    nn_global_add_transport (nn_tcpmux);
 
     /*  Plug in individual socktypes. */
     nn_global_add_socktype (nn_pair_socktype);
@@ -434,6 +437,51 @@ int nn_freemsg (void *msg)
 {
     nn_chunk_free (msg);
     return 0;
+}
+
+struct nn_cmsghdr *nn_cmsg_nxthdr_ (const struct nn_msghdr *mhdr,
+    const struct nn_cmsghdr *cmsg)
+{
+    char *data;
+    size_t sz;
+    struct nn_cmsghdr *next;
+    size_t headsz;
+
+    /*  Early return if no message is provided. */
+    if (nn_slow (mhdr == NULL))
+        return NULL;
+
+    /*  Get the actual data. */
+    if (mhdr->msg_controllen == NN_MSG) {
+        data = *((void**) mhdr->msg_control);
+        sz = nn_chunk_size (data);
+    }
+    else {
+        data = (char*) mhdr->msg_control;
+        sz = mhdr->msg_controllen;
+    }
+
+    /*  Ancillary data allocation was not even large enough for one element. */
+    if (nn_slow (sz < NN_CMSG_SPACE (0)))
+        return NULL;
+
+    /*  If cmsg is set to NULL we are going to return first property.
+        Otherwise move to the next property. */
+    if (!cmsg)
+        next = (struct nn_cmsghdr*) data;
+    else
+        next = (struct nn_cmsghdr*)
+            (((char*) cmsg) + NN_CMSG_ALIGN_ (cmsg->cmsg_len));
+
+    /*  If there's no space for next property, treat it as the end
+        of the property list. */
+    headsz = ((char*) next) - data;
+    if (headsz + NN_CMSG_SPACE (0) > sz ||
+          headsz + NN_CMSG_ALIGN_ (next->cmsg_len) > sz)
+        return NULL;
+    
+    /*  Success. */
+    return next;
 }
 
 int nn_global_create_socket (int domain, int protocol)
@@ -675,11 +723,13 @@ int nn_sendmsg (int s, const struct nn_msghdr *msghdr, int flags)
 {
     int rc;
     size_t sz;
+    size_t spsz;
     int i;
     struct nn_iovec *iov;
     struct nn_msg msg;
     void *chunk;
     int nnmsg;
+    struct nn_cmsghdr *cmsg;
 
     NN_BASIC_CHECKS;
 
@@ -739,15 +789,34 @@ int nn_sendmsg (int s, const struct nn_msghdr *msghdr, int flags)
 
     /*  Add ancillary data to the message. */
     if (msghdr->msg_control) {
+
+        /*  Copy all headers. */
+        /*  TODO: SP_HDR should not be copied here! */
         if (msghdr->msg_controllen == NN_MSG) {
             chunk = *((void**) msghdr->msg_control);
-            nn_chunkref_term (&msg.hdr);
-            nn_chunkref_init_chunk (&msg.hdr, chunk);
+            nn_chunkref_term (&msg.hdrs);
+            nn_chunkref_init_chunk (&msg.hdrs, chunk);
         }
         else {
+            nn_chunkref_term (&msg.hdrs);
+            nn_chunkref_init (&msg.hdrs, msghdr->msg_controllen);
+            memcpy (nn_chunkref_data (&msg.hdrs),
+                msghdr->msg_control, msghdr->msg_controllen);
+        }
 
-            /*  TODO: Copy the control data to the message. */
-            nn_assert (0);
+        /* Search for SP_HDR property. */
+        cmsg = NN_CMSG_FIRSTHDR (msghdr);
+        while (cmsg) {
+            if (cmsg->cmsg_level == PROTO_SP && cmsg->cmsg_type == SP_HDR) {
+                /*  Copy body of SP_HDR property into 'sphdr'. */
+                nn_chunkref_term (&msg.sphdr);
+                spsz = cmsg->cmsg_len - NN_CMSG_SPACE (0);
+                nn_chunkref_init (&msg.sphdr, spsz);
+                memcpy (nn_chunkref_data (&msg.sphdr),
+                    NN_CMSG_DATA (cmsg), spsz);
+                break;
+            }
+            cmsg = NN_CMSG_NXTHDR (msghdr, cmsg);
         }
     }
 
@@ -781,6 +850,12 @@ int nn_recvmsg (int s, struct nn_msghdr *msghdr, int flags)
     int i;
     struct nn_iovec *iov;
     void *chunk;
+    size_t hdrssz;
+    void *ctrl;
+    size_t ctrlsz;
+    size_t spsz;
+    size_t sptotalsz;
+    struct nn_cmsghdr *chdr;
 
     NN_BASIC_CHECKS;
 
@@ -831,15 +906,45 @@ int nn_recvmsg (int s, struct nn_msghdr *msghdr, int flags)
 
     /*  Retrieve the ancillary data from the message. */
     if (msghdr->msg_control) {
+
+        spsz = nn_chunkref_size (&msg.sphdr);
+        sptotalsz = NN_CMSG_SPACE (spsz);
+        ctrlsz = sptotalsz + nn_chunkref_size (&msg.hdrs);
+
         if (msghdr->msg_controllen == NN_MSG) {
-            chunk = nn_chunkref_getchunk (&msg.hdr);
-            *((void**) msghdr->msg_control) = chunk;
+
+            /* Allocate the buffer. */
+            rc = nn_chunk_alloc (ctrlsz, 0, &ctrl);
+            errnum_assert (rc == 0, -rc);
+
+            /* Set output parameters. */
+            *((void**) msghdr->msg_control) = ctrl;
         }
         else {
 
-            /*  TODO: Copy the data to the supplied buffer, prefix them
-                with size. */
-            nn_assert (0);
+            /* Just use the buffer supplied by the user. */
+            ctrl = msghdr->msg_control;
+            ctrlsz = msghdr->msg_controllen;
+        }
+
+        /* If SP header alone won't fit into the buffer, return no ancillary
+           properties. */
+        if (ctrlsz >= sptotalsz) {
+
+            /*  Fill in SP_HDR ancillary property. */
+            chdr = (struct nn_cmsghdr*) ctrl;
+            chdr->cmsg_len = sptotalsz;
+            chdr->cmsg_level = PROTO_SP;
+            chdr->cmsg_type = SP_HDR;
+            memcpy (chdr + 1, nn_chunkref_data (&msg.sphdr), spsz);
+
+            /*  Fill in as many remaining properties as possible.
+                Truncate the trailing properties if necessary. */
+            hdrssz = nn_chunkref_size (&msg.hdrs);
+            if (hdrssz > ctrlsz - sptotalsz)
+                hdrssz = ctrlsz - sptotalsz;
+            memcpy (((char*) ctrl) + sptotalsz,
+                nn_chunkref_data (&msg.hdrs), hdrssz);
         }
     }
 
@@ -1009,17 +1114,27 @@ static void nn_global_submit_errors (int i, struct nn_sock *s,
     }
 }
 
-static void nn_global_submit_statistics () {
+static void nn_global_submit_statistics ()
+{
     int i;
+    struct nn_sock *s;
 
     /*  TODO(tailhook)  optimized it to use nsocks and unused  */
     for(i = 0; i < NN_MAX_SOCKETS; ++i) {
-        struct nn_sock *s = self.socks [i];
-        if (!s)
+
+        nn_glock_lock ();
+        s = self.socks [i];
+        if (!s) {
+            nn_glock_unlock ();
             continue;
-        if (i == self.statistics_socket)
+        }
+        if (i == self.statistics_socket) {
+            nn_glock_unlock ();
             continue;
+        }
         nn_ctx_enter (&s->ctx);
+        nn_glock_unlock ();
+
         nn_global_submit_counter (i, s,
             "established_connections", s->statistics.established_connections);
         nn_global_submit_counter (i, s,
