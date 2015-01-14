@@ -2,7 +2,7 @@ nuget {
 	nuspec {
 		id = nanomsg;
 		title: nanomsg;
-		version: 0.3.0613.12;
+		version: 0.3.0613.13;
 		authors: {coapp, nanomsg Contributors, Tightrope Media Systems};
 		owners: {250bpm s.r.o.};
 		licenseUrl: "http://opensource.org/licenses/MIT";
@@ -20,51 +20,51 @@ The communication patterns, also called "scalability protocols", are basic block
 	};
 
 	files {
-		include : { "src\*.h", "src\utils\chunk.h", "src\utils\chunkref.h", "src\utils\int.h" };
+		include : { "x64\include\nanomsg\*" };
 		docs : {
 			#destination = {"${d_docs}\nanomsg"};
 			{"doc\**\*"};
 		};
-		mypdb: { 
+		//mypdb: { 
             // copies the whole folder tree.
-            #add-all-files : Items.nnPdb;
+         //   #add-all-files : Items.nnPdb;
             // set the destination in the package itself. 
-			#destination : ${build_root}\${conditionFolder}\nnPdb;
-        };
+		//	#destination : ${build_root}\${conditionFolder}\nnPdb;
+        //};
 		
-		[x64, v100, Debug] {
+		[x64, Debug] {
         	lib: {"x64\Debug\*.lib"};
-        	bin: {"x64\Debug\*.dll", "x64\Debug\*.exe"};
-        	mypdb: {"x64\Debug\*.pdb"};
+        	bin: {"x64\Debug\*.dll", "x64\Debug\nanocat.exe"};
+        //	mypdb: {"x64\Debug\*.pdb"};
 		};
 
-		[x64, v100, Release] {
+		[x64, Release] {
         	lib: {"x64\Release\*.lib"};
-        	bin: {"x64\Release\*.dll", "x64\Release\*.exe"};
-        	mypdb: {"x64\Release\*.pdb"};
+        	bin: {"x64\Release\*.dll", "x64\Release\nanocat.exe"};
+        //	mypdb: {"x64\RelWithDebInfo\*.pdb"};
 		};
 
-        [win32, v100, Debug] {
+        [win32, Debug] {
         	lib: {"Win32\Debug\*.lib"};
-        	bin: {"Win32\Debug\*.dll", "Win32\Debug\*.exe"};
-        	mypdb: {"Win32\Debug\*.pdb"};
+        	bin: {"Win32\Debug\*.dll", "Win32\Debug\nanocat.exe"};
+      //  	mypdb: {"Win32\Debug\*.pdb"};
 		};
 		
-		[win32, v100, Release] {
+		[win32, Release] {
         	lib: {"Win32\Release\*.lib"};
-        	bin: {"Win32\Release\*.dll", "Win32\Release\*.exe"};
-        	mypdb: {"Win32\Release\*.pdb"};
+        	bin: {"Win32\Release\*.dll", "Win32\Release\nanocat.exe"};
+    //    	mypdb: {"Win32\RelWithDebInfo\*.pdb"};
 		};
     }
 	
 	targets {
-		AfterBuild {
-			.Copy {
-				DestinationFolder = "$(TargetDir)";
-				SourceFiles = "@(nnPdb)";
-				SkipUnchangedFiles = true;
-				UseHardlinksIfPossible = true;
-			};
-		};
+	//	AfterBuild {
+	//		.Copy {
+	//			DestinationFolder = "$(TargetDir)";
+	//			SourceFiles = "@(nnPdb)";
+	//			SkipUnchangedFiles = true;
+	//			UseHardlinksIfPossible = true;
+	//		};
+	//	};
 	}
 }
